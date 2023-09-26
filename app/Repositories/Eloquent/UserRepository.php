@@ -77,6 +77,10 @@ class UserRepository implements UserRepositoryInterface
 
     public function delete(string $id): bool
     {
-        return true;
+        if (!$foundUser = $this->model->find($id)) {
+            throw new Exception("User {$id} not found.");
+        }
+
+        return $foundUser->delete();
     }
 }

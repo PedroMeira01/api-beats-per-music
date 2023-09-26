@@ -35,4 +35,9 @@ class UserService
     {
         return $this->repository->update($id, $input);
     }
+
+    public function destroy(string $id): bool
+    {
+        return $this->repository->delete($id);
+    }
 }

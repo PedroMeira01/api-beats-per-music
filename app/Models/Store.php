@@ -8,4 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class Store extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'description',
+        'email',
+        'user_id'
+    ];
+
+    protected $casts = [
+        'id' => 'string'
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
