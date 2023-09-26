@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
-use Core\Domain\Repositories\StoreRepositoryInterface;
+use Core\Domain\Repositories\ProductRepositoryInterface;
 
-class StoreService {
+class ProductService {
     public function __construct(
-        protected StoreRepositoryInterface $repository
+        protected ProductRepositoryInterface $repository
     ){}
 
     public function paginate(string $filter = '', string $order = 'DESC', int $page = 1, int $totalPerPage = 15)

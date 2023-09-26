@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Product;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateStoreRequest extends FormRequest
+class UpdateProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -26,15 +26,23 @@ class UpdateStoreRequest extends FormRequest
                 'required',
                 'min:3',
                 'max:255'
-            ],
+            ], 
             'description' => [
-                'string',
-                'max:255'
+                'max:255',
+                'string'
             ],
-            'email' => [
+            'price' => [
                 'required',
-                'email'
+                'numeric'
             ],
+            'salePrice' => [
+                'required',
+                'numeric'
+            ],
+            'availableQuantity' => [
+                'required',
+                'numeric'
+            ]
         ];
     }
 }

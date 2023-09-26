@@ -15,12 +15,25 @@ class StoreRepository implements StoreRepositoryInterface
 
     public function findAll(string $filter = '', $order = 'DESC'): array
     {
-        return [];   
+        $foundStores = $this->model
+                        ->where(function ($query) use ($filter) {
+                                if ($filter) {
+                                    $query->where('name', 'LIKE', "%{$filter}%");
+                                }
+                        })
+                        ->orderBy('name')
+                        ->get();
+                            
+        return $foundStores->toArray();
     }
 
     public function findById(string $id): Model
     {
-        return new Model();
+        if (!$foundStore = $this->model->find($id)) {
+            throw new Exception("Store {$id} not found.");
+        }
+
+        return $foundStore;
     }
 
     public function paginate(string $filter = '', $order = 'DESC', int $page = 1, int $totalPerPage = 15): object
@@ -51,7 +64,17 @@ class StoreRepository implements StoreRepositoryInterface
 
     public function update(string $id, $input): Model
     {
-        return new Model();
+        if (!$foundStore = $this->model->find($id)) {
+            throw new Exception("Store {$id} not found.");
+        }
+
+        $foundStore->update([
+            'name' => $input['name'],
+            'description' => $input['description'],
+            'email' => $input['email']
+        ]);
+
+        return $foundStore->refresh();
     }
 
     public function delete(string $id): bool

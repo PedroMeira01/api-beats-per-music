@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreStoreRequest;
+use App\Http\Requests\Store\StoreStoreRequest;
+use App\Http\Requests\Store\UpdateStoreRequest;
 use App\Http\Resources\StoreResource;
 use App\Services\StoreService;
 use Illuminate\Http\Request;
@@ -55,15 +56,19 @@ class StoreController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $output = $this->service->findById($id);
+
+        return (new StoreResource($output));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateStoreRequest $request, string $id)
     {
-        //
+        $output = $this->service->update($id, $request->validated());
+        
+        return (new StoreResource($output));
     }
 
     /**
