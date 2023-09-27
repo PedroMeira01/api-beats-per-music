@@ -47,4 +47,9 @@ class User extends Authenticatable
     {
         $this->hasMany(Store::class);
     }
+
+    public function addresses()
+    {
+        return $this->morphMany(Address::class, 'addressable');
+    }
 }

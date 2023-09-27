@@ -3,8 +3,8 @@
 namespace App\Repositories\Eloquent;
 
 use App\Models\User as UserModel;
+use Core\Domain\Exceptions\NotFoundException;
 use Core\Domain\Repositories\UserRepositoryInterface;
-use Exception;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -29,7 +29,7 @@ class UserRepository implements UserRepositoryInterface
     public function findById(string $id): UserModel
     {
         if (!$foundUser = $this->model->find($id)) {
-            throw new Exception("User {$id} not found");
+            throw new NotFoundException("User {$id} not found");
         }
         
         return $foundUser;
@@ -64,7 +64,7 @@ class UserRepository implements UserRepositoryInterface
     public function update(string $id, $input): UserModel
     {
         if (!$foundUser = $this->model->find($id)) {
-            throw new Exception("User {$id} not found.");
+            throw new NotFoundException("User {$id} not found.");
         }
 
         $foundUser->update([
@@ -78,7 +78,7 @@ class UserRepository implements UserRepositoryInterface
     public function delete(string $id): bool
     {
         if (!$foundUser = $this->model->find($id)) {
-            throw new Exception("User {$id} not found.");
+            throw new NotFoundException("User {$id} not found.");
         }
 
         return $foundUser->delete();

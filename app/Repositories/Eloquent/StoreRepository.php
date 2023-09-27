@@ -3,8 +3,8 @@
 namespace App\Repositories\Eloquent;
 
 use App\Models\Store;
+use Core\Domain\Exceptions\NotFoundException;
 use Core\Domain\Repositories\StoreRepositoryInterface;
-use Exception;
 use Illuminate\Database\Eloquent\Model;
 
 class StoreRepository implements StoreRepositoryInterface
@@ -30,7 +30,7 @@ class StoreRepository implements StoreRepositoryInterface
     public function findById(string $id): Model
     {
         if (!$foundStore = $this->model->find($id)) {
-            throw new Exception("Store {$id} not found.");
+            throw new NotFoundException("Store {$id} not found.");
         }
 
         return $foundStore;
@@ -65,7 +65,7 @@ class StoreRepository implements StoreRepositoryInterface
     public function update(string $id, $input): Model
     {
         if (!$foundStore = $this->model->find($id)) {
-            throw new Exception("Store {$id} not found.");
+            throw new NotFoundException("Store {$id} not found.");
         }
 
         $foundStore->update([
@@ -80,7 +80,7 @@ class StoreRepository implements StoreRepositoryInterface
     public function delete(string $id): bool
     {
         if (!$foundStore = $this->model->find($id)) {
-            throw new Exception("Store {$id} not found.");
+            throw new NotFoundException("Store {$id} not found.");
         }
 
         return $foundStore->delete();

@@ -3,6 +3,7 @@
 namespace App\Repositories\Eloquent;
 
 use App\Models\Product;
+use Core\Domain\Exceptions\NotFoundException;
 use Core\Domain\Repositories\ProductRepositoryInterface;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -30,7 +31,7 @@ class ProductRepository implements ProductRepositoryInterface
     public function findById(string $id): Model
     {
         if (!$foundProduct = $this->model->find($id)) {
-            throw new Exception("Product {$id} not found.");
+            throw new NotFoundException("Product {$id} not found.");
         }
 
         return $foundProduct;
@@ -67,7 +68,7 @@ class ProductRepository implements ProductRepositoryInterface
     public function update(string $id, $input): Model
     {
         if (!$foundProduct = $this->model->find($id)) {
-            throw new Exception("Product {$id} not found.");
+            throw new NotFoundException("Product {$id} not found.");
         }
 
         $foundProduct->update([
@@ -84,7 +85,7 @@ class ProductRepository implements ProductRepositoryInterface
     public function delete(string $id): bool
     {
         if (!$foundProduct = $this->model->find($id)) {
-            throw new Exception("Product {$id} not found.");
+            throw new NotFoundException("Product {$id} not found.");
         }
 
         return $foundProduct->delete();
