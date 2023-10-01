@@ -7,12 +7,13 @@ use App\Http\Requests\Store\StoreStoreRequest;
 use App\Http\Requests\Store\UpdateStoreRequest;
 use App\Http\Resources\StoreResource;
 use App\Services\StoreService;
+use Core\Domain\Repositories\StoreRepositoryInterface;
 use Illuminate\Http\Request;
 
 class StoreController extends Controller
 {
     public function __construct(
-        protected StoreService $service
+        protected StoreRepositoryInterface $repository
     ){}
 
     /**
@@ -20,7 +21,7 @@ class StoreController extends Controller
      */
     public function index(Request $request)
     {
-        $output = $this->service->paginate(
+        $output = $this->repository->paginate(
             $request->get('filter', ''),
             $request->get('order', 'DESC'),
             $request->get('page', 1),
@@ -46,7 +47,7 @@ class StoreController extends Controller
      */
     public function store(StoreStoreRequest $request)
     {
-        $output = $this->service->store($request->validated());
+        $output = $this->repository->store($request->validated());
         
         return (new StoreResource($output));
     }
@@ -56,7 +57,7 @@ class StoreController extends Controller
      */
     public function show(string $id)
     {
-        $output = $this->service->findById($id);
+        $output = $this->repository->findById($id);
 
         return (new StoreResource($output));
     }
@@ -66,7 +67,7 @@ class StoreController extends Controller
      */
     public function update(UpdateStoreRequest $request, string $id)
     {
-        $output = $this->service->update($id, $request->validated());
+        $output = $this->repository->update($id, $request->validated());
         
         return (new StoreResource($output));
     }
@@ -76,7 +77,7 @@ class StoreController extends Controller
      */
     public function destroy(string $id)
     {
-        $output = $this->service->delete($id);
+        $output = $this->repository->delete($id);
 
         return response()->noContent();
     }

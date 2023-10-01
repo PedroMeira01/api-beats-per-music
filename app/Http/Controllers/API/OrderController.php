@@ -3,10 +3,16 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Order\StoreOrderRequest;
 use Illuminate\Http\Request;
+use OrderRepositoryInterface;
 
 class OrderController extends Controller
 {
+    public function __construct(
+        protected OrderRepositoryInterface $repository
+    ){}
+
     /**
      * Display a listing of the resource.
      */
@@ -18,9 +24,9 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreOrderRequest $request)
     {
-        //
+        dd($request);
     }
 
     /**

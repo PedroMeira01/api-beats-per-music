@@ -7,13 +7,14 @@ use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Services\UserService;
+use Core\Domain\Repositories\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
     public function __construct(
-        protected UserService $service
+        protected UserRepositoryInterface $repository
     ){}
     
     /**
@@ -21,7 +22,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $output = $this->service->paginate(
+        $output = $this->repository->paginate(
             filter: $request->get('filter', ''),
             order: $request->get('order', 'DESC'),
             page: $request->get('page', 1),
@@ -47,7 +48,7 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        $output = $this->service->store($request->validated());
+        $output = $this->repository->store($request->validated());
 
         return (new UserResource($output))
                     ->response()
@@ -59,7 +60,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        $output = $this->service->findById($id);
+        $output = $this->repository->findById($id);
 
         return (new UserResource($output));
     }
@@ -69,7 +70,7 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, string $id)
     {
-        $output = $this->service->update($id, $request->validated());
+        $output = $this->repository->update($id, $request->validated());
 
         return (new UserResource($output))->response();
     }
@@ -79,7 +80,7 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        $output = $this->service->destroy($id);
+        $output = $this->repository->destroy($id);
 
         return response()->noContent();
     }

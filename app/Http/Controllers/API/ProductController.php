@@ -7,13 +7,14 @@ use App\Http\Requests\Product\StoreProductRequest;
 use App\Http\Requests\Product\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Services\ProductService;
+use Core\Domain\Repositories\ProductRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class ProductController extends Controller
 {
     public function __construct(
-        protected ProductService $service
+        protected ProductRepositoryInterface $repository
     ){}
 
     /**
@@ -21,7 +22,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $output = $this->service->paginate(
+        $output = $this->repository->paginate(
             filter: $request->get('filter', ''),
             order: $request->get('order', 'DESC'),
             page: $request->get('page', 1),
@@ -47,7 +48,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        $output = $this->service->store($request->validated());
+        $output = $this->repository->store($request->validated());
 
         return (new ProductResource($output))
                                 ->response()
@@ -59,7 +60,7 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        $output = $this->service->findById($id);
+        $output = $this->repository->findById($id);
 
         return (new ProductResource($output));
     }
@@ -69,7 +70,7 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, string $id)
     {
-        $output = $this->service->update($id, $request->validated());
+        $output = $this->repository->update($id, $request->validated());
 
         return (new ProductResource($output));
     }
@@ -79,7 +80,7 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        $this->service->delete($id);
+        $this->repository->delete($id);
 
         return response()->noContent();
     }
