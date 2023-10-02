@@ -4,8 +4,10 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\StoreOrderRequest;
+use App\Http\Resources\OrderResource;
+use Core\Domain\Repositories\OrderRepositoryInterface;
 use Illuminate\Http\Request;
-use OrderRepositoryInterface;
+use Illuminate\Http\Response;
 
 class OrderController extends Controller
 {
@@ -26,7 +28,9 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
-        dd($request);
+        $output = $this->repository->store($request->validated());
+
+        return (new OrderResource($output))->response()->setStatusCode(Response::HTTP_CREATED);
     }
 
     /**
