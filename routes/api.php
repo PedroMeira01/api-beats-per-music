@@ -24,3 +24,6 @@ Route::apiResources([
     'products' => ProductController::class,
     'orders' => OrderController::class,
 ]);
+
+Route::put('orders/{id}/cancel', [OrderController::class, 'cancel']);
+Route::delete('delete-orders', [OrderController::class, 'deleteAllOrders']);

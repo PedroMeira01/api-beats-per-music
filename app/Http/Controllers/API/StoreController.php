@@ -48,7 +48,7 @@ class StoreController extends Controller
     public function store(StoreStoreRequest $request)
     {
         $output = $this->repository->store($request->validated());
-        
+ 
         return (new StoreResource($output));
     }
 

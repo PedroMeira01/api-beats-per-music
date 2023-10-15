@@ -16,25 +16,21 @@ class OrderResource extends JsonResource
     {
         return [
             'user_id' => $this->user_id,
+            'status' => $this->status,
             'payment_type' => $this->payment_type,
             'total_order' => $this->total_order,
             'tracking_code' => $this->tracking_code,
-            "delivery_address" => [
-                "street" => $this->delivery_address->street,
-                "number" => $this->delivery_address->number,
-                "add_on" => $this->delivery_address->add_on,
-                "zip_code" => $this->delivery_adress->zip_code,
-                "neighborhood" => $this->delivery_address->neighborhood,
-                "state" => $this->delivery_adress->state
-            ],
-            'items' => [
-                'product_id' => $this->product_id,
-                'quantity' => $this->quantity,
-                'unitPurchasePrice' => $this->unitPurchasePrice,
-                'subtotal' => $this->subtotal,
-                'discount' => $this->discount,
-                'total' => $this->total
-            ]
+            'delivery_address_id' => $this->delivery_address_id,
+            'items' => $this->items->map(function ($item) {
+                return [
+                    'product_id' => $item->product_id,
+                    'quantity' => $item->quantity,
+                    'unitPurchasePrice' => $item->unitPurchasePrice,
+                    'subtotal' => $item->subtotal,
+                    'discount' => $item->discount,
+                    'total' => $item->total,
+                ];
+            }),
         ];
     }
 }
