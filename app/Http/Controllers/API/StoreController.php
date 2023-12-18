@@ -48,7 +48,7 @@ class StoreController extends Controller
     public function store(StoreStoreRequest $request)
     {
         $output = $this->repository->store($request->validated());
- 
+
         return (new StoreResource($output));
     }
 
@@ -68,7 +68,7 @@ class StoreController extends Controller
     public function update(UpdateStoreRequest $request, string $id)
     {
         $output = $this->repository->update($id, $request->validated());
-        
+
         return (new StoreResource($output));
     }
 

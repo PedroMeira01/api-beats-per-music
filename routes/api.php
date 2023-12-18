@@ -1,29 +1,38 @@
 <?php
 
+use App\Http\Controllers\API\Auth\AuthController;
 use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\StoreController;
 use App\Http\Controllers\API\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
+Route::get('hello-world', function () {
+    echo "Hello World";
+});
 
-Route::apiResources([
-    'users' => UserController::class,
-    'stores' => StoreController::class,
-    'products' => ProductController::class,
-    'orders' => OrderController::class,
-]);
+Route::post('/login', [AuthController::class, 'login']);
 
-Route::put('orders/{id}/cancel', [OrderController::class, 'cancel']);
-Route::delete('delete-orders', [OrderController::class, 'deleteAllOrders']);
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
+
+Route::controller(UserController::class)->group(function() {
+	Route::post('/users', 'store');
+});
+
+Route::middleware('auth:sanctum')->group(function() {
+	Route::controller(StoreController::class)->group(function() {
+		Route::get('/stores', 'index');
+		Route::post('/stores', 'store');
+	});
+
+	Route::controller(ProductController::class)->group(function() {
+		Route::post('/products', 'store');
+	});
+
+	Route::controller(OrderController::class)->group(function() {
+		Route::post('/orders', 'store');
+	});
+});
+
+

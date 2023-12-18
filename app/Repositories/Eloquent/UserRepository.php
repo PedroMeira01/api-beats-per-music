@@ -31,7 +31,7 @@ class UserRepository implements UserRepositoryInterface
         if (!$foundUser = $this->model->find($id)) {
             throw new NotFoundException("User {$id} not found");
         }
-        
+
         return $foundUser;
     }
 
@@ -49,9 +49,8 @@ class UserRepository implements UserRepositoryInterface
         return $foundUsers;
     }
 
-    public function store($input): UserModel
+    public function store(array $input): UserModel
     {
-
         $createdUser = $this->model->create([
             'name' => $input['name'],
             'email' => $input['email'],

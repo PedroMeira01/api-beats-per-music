@@ -5,9 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\StoreOrderRequest;
 use App\Http\Resources\OrderResource;
-use App\Models\Address;
-use App\Models\Order;
-use App\Models\OrderItem;
 use Core\Domain\Repositories\OrderRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -18,9 +15,6 @@ class OrderController extends Controller
         protected OrderRepositoryInterface $repository
     ){}
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $output = $this->repository->paginateByUser(
@@ -44,9 +38,6 @@ class OrderController extends Controller
                                 ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreOrderRequest $request)
     {
         $output = $this->repository->register($request->validated());
@@ -56,9 +47,6 @@ class OrderController extends Controller
                                 ->setStatusCode(Response::HTTP_CREATED);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $output = $this->repository->findById($id);
@@ -66,9 +54,6 @@ class OrderController extends Controller
         return (new OrderResource($output));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function cancel(string $id, Request $request)
     {
         $output = $this->repository->cancel($id, $request->input('userId'));

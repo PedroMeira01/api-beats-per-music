@@ -17,9 +17,6 @@ class ProductController extends Controller
         protected ProductRepositoryInterface $repository
     ){}
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $output = $this->repository->paginate(
@@ -43,9 +40,6 @@ class ProductController extends Controller
                                 ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreProductRequest $request)
     {
         $output = $this->repository->store($request->validated());
@@ -55,9 +49,6 @@ class ProductController extends Controller
                                 ->setStatusCode(Response::HTTP_CREATED);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $output = $this->repository->findById($id);
@@ -65,9 +56,6 @@ class ProductController extends Controller
         return (new ProductResource($output));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateProductRequest $request, string $id)
     {
         $output = $this->repository->update($id, $request->validated());
@@ -75,9 +63,7 @@ class ProductController extends Controller
         return (new ProductResource($output));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(string $id)
     {
         $this->repository->delete($id);

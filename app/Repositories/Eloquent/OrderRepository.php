@@ -6,11 +6,12 @@ use App\Enums\OrderStatus;
 use App\Models\Address;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Models\User;
 use Core\Domain\Exceptions\NotFoundException;
 use Core\Domain\Repositories\OrderRepositoryInterface;
 use Core\Domain\Repositories\UserRepositoryInterface;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class OrderRepository implements OrderRepositoryInterface {
     public function __construct(
@@ -49,22 +50,30 @@ class OrderRepository implements OrderRepositoryInterface {
         return $foundOrders;
     }
 
-    public function register($input): object|array
+    public function register(array $input): object|array
     {
-        if (!$foundUser = $this->userRepository->findById($input['user_id'])) {
+        if (!$this->userRepository->findById($input['user_id'])) {
             throw new NotFoundException("User {$input['user_id']} not found.");
         }
 
-        $createdOrder = $this->model->create([
-            'user_id' => $input['user_id'],
-            'status' => OrderStatus::PENDING_PAYMENT,
-            'payment_type' => $input['payment_type'],
-            'total_order' => $input['total_order'],
-            'tracking_code' => $input['tracking_code'],
-            'delivery_address_id' => $input['delivery_address_id']
-        ]);
+        try {
+            DB::beginTransaction();
 
-        $this->storeOrderItems($createdOrder, $input['items']);
+            $createdOrder = $this->model->create([
+                'user_id' => $input['user_id'],
+                'status' => OrderStatus::PENDING_PAYMENT,
+                'payment_type' => $input['payment_type'],
+                'total_order' => $input['total_order'],
+                'tracking_code' => $input['tracking_code']
+            ]);
+    
+            $this->storeOrderItems($createdOrder, $input['items']);
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw new Exception($th->getMessage());   
+        }
 
         return $createdOrder->load('items');
     }
@@ -87,10 +96,10 @@ class OrderRepository implements OrderRepositoryInterface {
         $orderItems = [];
         foreach ($items as $item) {
             $orderItems[] = $order->items()->create([
-                'product_id' => $item['productId'],
+                'product_id' => $item['product_id'],
                 'order_id' => $order['id'],
                 'quantity' => $item['quantity'],
-                'unitPurchasePrice' => $item['unitPurchasePrice'],
+                'unitPurchasePrice' => $item['unit_purchase_price'],
                 'subtotal' => $item['subtotal'],
                 'discount' => $item['discount'],
                 'total' => $item['total']

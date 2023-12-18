@@ -21,10 +21,6 @@ return new class extends Migration
             $table->enum('payment_type', array_keys(PaymentTypes::cases()));
             $table->decimal('total_order');
             $table->string('tracking_code');
-            $table->unsignedBigInteger('delivery_address_id');
-            $table->foreign('delivery_address_id')
-                  ->references('id')
-                  ->on('addresses');
             $table->timestamps();
         });
     }

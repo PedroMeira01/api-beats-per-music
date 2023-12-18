@@ -28,11 +28,10 @@ class StoreOrderRequest extends FormRequest
             'payment_type' => new Enum(PaymentTypes::class),
             'total_order' => 'required|numeric', 
             'tracking_code' => 'nullable',
-            'delivery_address_id' => 'numeric',
             'items' => 'required|array',
-            'items.*.productId' => 'required|numeric',
+            'items.*.product_id' => 'required|numeric',
             'items.*.quantity' => 'required|numeric',
-            'items.*.unitPurchasePrice' => 'required|numeric',
+            'items.*.unit_purchase_price' => 'required|numeric',
             'items.*.subtotal' => 'required|numeric',
             'items.*.discount' => 'required|numeric',
             'items.*.total' => 'required|numeric'
